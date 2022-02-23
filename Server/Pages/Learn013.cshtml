@@ -7,9 +7,20 @@
 	@ for(...)
 *@
 
+@*
+	@for (int index = 1; index <= 5; index++)
+	{
+	<h3>Hello, World (@(index))!</h3>
+
+	<hr />
+	}
+*@
+
 @for (int index = 1; index <= 5; index++)
 {
-	<h3>Hello, World (@(index))!</h3>
+	<h3>
+		Hello, World (@(index))!
+	</h3>
 
 	<hr />
 }

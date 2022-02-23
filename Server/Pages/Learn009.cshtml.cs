@@ -5,7 +5,10 @@ namespace Server.Pages
 	{
 		public Learn009Model() : base()
 		{
+			//SomePublicField = "Initial Value";
 		}
+
+		//public string SomePublicField;
 
 		// https://code-maze.com/csharp-access-modifiers
 
