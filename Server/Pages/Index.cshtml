@@ -1,0 +1,80 @@
+﻿@page
+@model Server.Pages.IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Home</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+	<h3>
+		Solution (1) - (~)
+	</h3>
+
+	<a href="/Learn001">Learn 001</a>
+	<br />
+
+	<a href="~/Learn002">Learn 002</a>
+	<br />
+	<a href="~/Learn003">Learn 003</a>
+	<br />
+	<a href="~/Learn004">Learn 004</a>
+	<br />
+	<a href="~/Learn005">Learn 005</a>
+	<br />
+	<a href="~/Learn006">Learn 006</a>
+	<br />
+	<a href="~/Learn007">Learn 007</a>
+	<br />
+	<a href="~/Learn008">Learn 008</a>
+	<br />
+	<a href="~/Learn009">Learn 009</a>
+	<br />
+	<a href="~/Learn010">Learn 010</a>
+	<br />
+	<a href="~/Learn011">Learn 011</a>
+	<br />
+	<a href="~/Learn012">Learn 012</a>
+	<br />
+	<a href="~/Learn013">Learn 013</a>
+	<br />
+
+	<hr />
+
+	<h3>
+		Solution (2) - (For)
+	</h3>
+
+	@for (int index = 1; index <= 13; index++)
+	{
+		string fileIndex = index.ToString()
+		.PadLeft(totalWidth: 3, paddingChar: '0');
+
+		<a href="~/Learn@(fileIndex)">Learn @(fileIndex)</a>
+		<br />
+	}
+
+	<hr />
+
+	<h3>
+		Solution (3) - Tag Helper
+	</h3>
+
+	@for (int index = 1; index <= 13; index++)
+	{
+		string fileIndex = index.ToString()
+		.PadLeft(totalWidth: 3, paddingChar: '0');
+
+		@*
+			<a asp-page="~/Learn@(fileIndex)">Learn @(fileIndex)</a>
+		*@
+
+		<a asp-page="/Learn@(fileIndex)">Learn @(fileIndex)</a>
+		<br />
+	}
+</body>
+</html>

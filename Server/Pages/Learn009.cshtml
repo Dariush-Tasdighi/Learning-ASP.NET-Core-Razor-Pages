@@ -1,0 +1,48 @@
+﻿@page
+@model Server.Pages.Learn009Model
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Home</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<h3>
+		@(Model.PublicField)
+	</h3>
+
+	<hr />
+
+	<h3>
+		@(Model.PublicProperty)
+	</h3>
+
+	<hr />
+
+	<h3>
+		@(Model.InternalField)
+	</h3>
+
+	<hr />
+
+	<h3>
+		@(Model.InternalProperty)
+	</h3>
+
+	<hr />
+
+	<h3>
+		@(Model.ProtectedInternalField)
+	</h3>
+
+	<hr />
+
+	<h3>
+		@(Model.ProtectedInternalProperty)
+	</h3>
+
+	<hr />
+</body>
+</html>

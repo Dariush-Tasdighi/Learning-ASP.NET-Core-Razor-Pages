@@ -1,0 +1,44 @@
+﻿@page
+@model Server.Pages.Learn010Model
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Home</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	@@Hello
+
+	<hr />
+
+	@@@@Hello
+
+	<hr />
+
+	DariushT@GMail.com
+
+	<hr />
+
+	@{
+		string myImageFileName = "Dariush";
+	}
+
+	@*
+		<img src="/images/@myImageFileName.jpg" />
+	*@
+
+	@{
+		string myImageFileNameWithExtension = $"{myImageFileName}.jpg";
+	}
+
+	<img src="/images/@myImageFileNameWithExtension" />
+
+	<hr />
+
+	<img src="/images/@(myImageFileName).jpg" />
+
+	<hr />
+</body>
+</html>
