@@ -1,0 +1,74 @@
+﻿@page
+@model Server.Pages.Learn014Model
+
+@{
+	string fullName = "Dariush Tasdighi";
+}
+
+@if (fullName.StartsWith("Dariush"))
+{
+	<span>I'm Dariush</span>
+}
+else
+{
+	<span>I'm not Dariush</span>
+}
+
+@*
+	Error!
+
+	@if(fullName.StartsWith("Dariush"))
+	{
+	I'm Dariush
+	}
+	else
+	{
+	I'm not Dariush
+	}
+*@
+
+<hr />
+
+@if (fullName.StartsWith("Dariush"))
+{
+	<text>I'm Dariush</text>
+}
+else
+{
+	<text>I'm not Dariush</text>
+}
+
+<hr />
+
+@if (fullName.StartsWith("Dariush"))
+{
+	<text>I'm <b>Dariush</b></text>
+}
+else
+{
+	<text>I'm not <b>Dariush</b></text>
+}
+
+<hr />
+
+@if (fullName.StartsWith("Dariush"))
+{
+	@:I'm Dariush
+}
+else
+{
+	@:I'm not Dariush
+}
+
+<hr />
+
+@if (fullName.StartsWith("Dariush"))
+{
+	@:I'm <b>Dariush</b>
+}
+else
+{
+	@:I'm not <b>Dariush</b>
+}
+
+<hr />

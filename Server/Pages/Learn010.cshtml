@@ -26,6 +26,8 @@
 	}
 
 	@*
+		Error!
+
 		<img src="/images/@myImageFileName.jpg" />
 	*@
 
@@ -33,11 +35,17 @@
 		string myImageFileNameWithExtension = $"{myImageFileName}.jpg";
 	}
 
-	<img src="/images/@myImageFileNameWithExtension" />
+	@*
+		Warning!
+
+		<img src="/images/@myImageFileNameWithExtension" />
+	*@
+
+	<img src="/images/@myImageFileNameWithExtension" alt="Profile Image" />
 
 	<hr />
 
-	<img src="/images/@(myImageFileName).jpg" />
+	<img src="/images/@(myImageFileName).jpg" alt="Profile Image" />
 
 	<hr />
 </body>
