@@ -10,6 +10,9 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+// UseStaticFiles() -> using Microsoft.AspNetCore.Builder;
+app.UseStaticFiles();
+
 // MapRazorPages() -> using Microsoft.AspNetCore.Builder;
 app.MapRazorPages();
 
