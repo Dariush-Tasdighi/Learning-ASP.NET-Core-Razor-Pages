@@ -5,14 +5,16 @@
 	string fullName = "Dariush Tasdighi";
 }
 
-@if (fullName.StartsWith("Dariush"))
-{
-	<span>I'm Dariush</span>
-}
-else
-{
-	<span>I'm not Dariush</span>
-}
+<div>
+	@if (fullName.StartsWith("Dariush"))
+	{
+		<span>I'm Dariush</span>
+	}
+	else
+	{
+		<span>I'm not Dariush</span>
+	}
+</div>
 
 @*
 	Error!
