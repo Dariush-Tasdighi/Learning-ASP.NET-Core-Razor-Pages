@@ -1,0 +1,104 @@
+﻿<!doctype html>
+
+<html lang="fa" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>@(ViewBag.Title)</title>
+
+	<meta name="author" content="Mr. Dariush Tasdighi" />
+	<meta name="description" content="A simple HTML5 Template for new projects." />
+
+	<meta property="og:type" content="website" />
+	<meta property="og:image" content="image.png" />
+	<meta property="og:title" content="A Basic HTML5 Template" />
+	<meta property="og:url" content="https://www.sitepoint.com/a-basic-html5-template/" />
+	<meta property="og:description" content="A simple HTML5 Template for new projects." />
+
+	<link rel="icon" href="/favicon.ico" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+	<environment include="Development">
+		<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.css" />
+		<link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
+	</environment>
+
+	<environment exclude="Development">
+		<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.min.css" />
+		<link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+	</environment>
+
+	<link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+
+	@RenderSection(name: "StyleSheets", required: false)
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">DTAT CMS</a>
+
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">خانه</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="#">درباره ما</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="#">تماس با ما</a>
+					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							تنظیمات
+						</a>
+
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<li><a class="dropdown-item" href="#">تغییر گذرواژه</a></li>
+							<li><a class="dropdown-item" href="#">ویرایش پروفایل</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" href="#">ارسال تصویر</a></li>
+						</ul>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link disabled">ورود به سامانه</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		@(RenderBody())
+	</div>
+
+	<environment include="Development">
+		<script src="~/lib/bootstrap/js/bootstrap.js"></script>
+
+		<script src="~/lib/jquery/jquery.js"></script>
+		<script src="~/lib/jquery-validate/jquery.validate.js"></script>
+		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+	</environment>
+
+	<environment exclude="Development">
+		<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+
+		<script src="~/lib/jquery/jquery.min.js"></script>
+		<script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	</environment>
+
+	@RenderSection(name: "Scripts", required: false)
+</body>
+</html>
