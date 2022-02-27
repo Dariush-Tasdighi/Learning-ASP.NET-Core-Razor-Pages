@@ -50,8 +50,9 @@
 
 	@for (int index = 1; index <= 20; index++)
 	{
-		string fileIndex = index.ToString()
-		.PadLeft(totalWidth: 3, paddingChar: '0');
+		string fileIndex =
+			index.ToString()
+			.PadLeft(totalWidth: 3, paddingChar: '0');
 
 		<a href="~/Learn@(fileIndex)">Learn @(fileIndex)</a>
 		<br />
@@ -61,12 +62,15 @@
 
 	<h3>
 		Solution (3) - Tag Helper
+		<br />
+		@@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 	</h3>
 
 	@for (int index = 1; index <= 20; index++)
 	{
-		string fileIndex = index.ToString()
-		.PadLeft(totalWidth: 3, paddingChar: '0');
+		string fileIndex =
+			index.ToString()
+			.PadLeft(totalWidth: 3, paddingChar: '0');
 
 		@*
 			<a asp-page="~/Learn@(fileIndex)">Learn @(fileIndex)</a>

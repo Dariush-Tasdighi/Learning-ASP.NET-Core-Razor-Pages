@@ -9,6 +9,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
+	@*
+		@Hello
+	*@
+
 	@@Hello
 
 	<hr />
@@ -36,7 +40,7 @@
 	}
 
 	@*
-		Warning!
+		HTML Validator Warning!
 
 		<img src="/images/@myImageFileNameWithExtension" />
 	*@
@@ -52,5 +56,7 @@
 	<img src="~/images/@(myImageFileName).jpg" alt="Profile Image" />
 
 	<hr />
+
+	<a href="~/Index">Home</a>
 </body>
 </html>

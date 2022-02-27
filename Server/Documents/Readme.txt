@@ -72,7 +72,7 @@ https://www.favicongenerator.com/
 
 **************************************************
 )
-Right Click on Project -> Select [Manage Client-Side Libraries…]
+Right Click on Project (Server) -> Select [Manage Client-Side Libraries…]
 .\libman.json
 **************************************************
 
