@@ -10,6 +10,8 @@
 </head>
 <body>
 	@*
+		Error: Razor
+
 		@Hello
 	*@
 
@@ -30,7 +32,7 @@
 	}
 
 	@*
-		Error!
+		Error: Razor
 
 		<img src="/images/@myImageFileName.jpg" />
 	*@
@@ -40,10 +42,10 @@
 	}
 
 	@*
-		HTML Validator Warning!
-
-		<img src="/images/@myImageFileNameWithExtension" />
+		Error: HTML Validator
 	*@
+
+	<img src="/images/@myImageFileNameWithExtension" />
 
 	<img src="/images/@myImageFileNameWithExtension" alt="Profile Image" />
 
@@ -58,5 +60,23 @@
 	<hr />
 
 	<a href="~/Index">Home</a>
+
+	<hr />
+
+	<h3>
+		Learning HTML Helper
+	</h3>
+
+	@{
+		string text = "<h3>Hello, World!</h3>";
+	}
+
+	@(text)
+
+	<br />
+
+	@Html.Raw(text)
+
+	<hr />
 </body>
 </html>
