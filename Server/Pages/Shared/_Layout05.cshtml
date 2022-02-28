@@ -1,0 +1,67 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!doctype html>
+
+<html lang="fa" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>@(ViewBag.Title)</title>
+
+	<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.min.css" />
+	<link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+
+	<link href="~/css/site.css" rel="stylesheet" />
+</head>
+
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+			<div class="container">
+				<a class="navbar-brand" href="#">متخصصین ایرانی</a>
+
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+							<a asp-page="Index" class="nav-link">خانه</a>
+						</li>
+
+						<li class="nav-item">
+							<a asp-page="Page1" class="nav-link">صفحه ۱</a>
+						</li>
+
+						<li class="nav-item">
+							<a asp-page="Page2" class="nav-link">صفحه ۲</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main style="margin-top: 80px; margin-bottom: 80px;">
+		<div class="container">
+			@(RenderBody())
+		</div>
+	</main>
+
+	<footer class="py-3 bg-light fixed-bottom" dir="ltr">
+		<div class="container">
+			<span class="text-muted text-light">
+				© 2020 - <a href="https://DTAT.ir">DTAT.ir</a>
+			</span>
+		</div>
+	</footer>
+
+	<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+
+	<script src="~/lib/jquery/jquery.min.js"></script>
+	<script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
