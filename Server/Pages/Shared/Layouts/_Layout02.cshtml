@@ -1,0 +1,36 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!doctype html>
+
+<html lang="fa" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<partial name="PartialViews/_Seo" />
+
+	<partial name="PartialViews/_OpenGraph" />
+
+	<partial name="PartialViews/_FavoriteIcon" />
+
+	<partial name="PartialViews/_StyleSheets" />
+
+	@RenderSection(name: "StyleSheets", required: false)
+</head>
+
+<body>
+	<partial name="PartialViews/_Header" />
+
+	<main style="margin-top: 80px; margin-bottom: 80px;">
+		<div class="container">
+			@(RenderBody())
+		</div>
+	</main>
+
+	<partial name="PartialViews/_Footer" />
+
+	<partial name="PartialViews/_Scripts" />
+
+	@RenderSection(name: "Scripts", required: false)
+</body>
+</html>
