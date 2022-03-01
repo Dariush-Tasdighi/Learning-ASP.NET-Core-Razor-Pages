@@ -15,7 +15,7 @@
 // **************************************************
 // Step (2)
 // **************************************************
-// <ImplicitUsings>disable</ImplicitUsings >
+// <ImplicitUsings>disable</ImplicitUsings>
 // **************************************************
 //using Microsoft.AspNetCore.Builder;
 
@@ -87,13 +87,16 @@
 //using Microsoft.Extensions.DependencyInjection;
 
 //var webApplicationOptions =
-//	new WebApplicationOptions
+//	new Microsoft.AspNetCore.Builder.WebApplicationOptions
 //	{
-//		EnvironmentName =
-//			Microsoft.Extensions.Hosting.Environments.Development,
+//		//EnvironmentName =
+//		//	Microsoft.Extensions.Hosting.Environments.Development,
 
 //		//EnvironmentName =
-//		//	Microsoft.Extensions.Hosting.Environments.Production,
+//		//	Microsoft.Extensions.Hosting.Environments.Staging,
+
+//		EnvironmentName =
+//			Microsoft.Extensions.Hosting.Environments.Production,
 //	};
 
 //var builder =
@@ -106,8 +109,25 @@
 //var app =
 //	builder.Build();
 
+////// IsDevelopment() -> using Microsoft.Extensions.Hosting;
+////if (app.Environment.IsDevelopment() == false)
+////{
+////	// UseExceptionHandler() -> using Microsoft.AspNetCore.Builder;
+////	app.UseExceptionHandler("/Errors/Error");
+
+////	// The default HSTS value is 30 days.
+////	// You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+////	// UseHsts() -> using Microsoft.AspNetCore.Builder; 
+////	app.UseHsts();
+////}
+
 //// IsDevelopment() -> using Microsoft.Extensions.Hosting;
-//if (app.Environment.IsDevelopment() == false)
+//if (app.Environment.IsDevelopment())
+//{
+//	// UseDeveloperExceptionPage() -> using Microsoft.AspNetCore.Builder;
+//	app.UseDeveloperExceptionPage();
+//}
+//else
 //{
 //	// UseExceptionHandler() -> using Microsoft.AspNetCore.Builder;
 //	app.UseExceptionHandler("/Errors/Error");
@@ -155,7 +175,12 @@ var app =
 	builder.Build();
 
 // IsDevelopment() -> using Microsoft.Extensions.Hosting;
-if (app.Environment.IsDevelopment() == false)
+if (app.Environment.IsDevelopment())
+{
+	// UseDeveloperExceptionPage() -> using Microsoft.AspNetCore.Builder;
+	app.UseDeveloperExceptionPage();
+}
+else
 {
 	// UseExceptionHandler() -> using Microsoft.AspNetCore.Builder;
 	app.UseExceptionHandler("/Errors/Error");
@@ -165,6 +190,11 @@ if (app.Environment.IsDevelopment() == false)
 	// UseHsts() -> using Microsoft.AspNetCore.Builder; 
 	app.UseHsts();
 }
+
+// http://www.DTAT.ir
+// http://DTAT.ir
+// https://www.DTAT.ir
+//		https://DTAT.ir
 
 // UseHttpsRedirection() -> using Microsoft.AspNetCore.Builder;
 app.UseHttpsRedirection();
