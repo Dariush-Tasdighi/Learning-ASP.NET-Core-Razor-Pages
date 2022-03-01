@@ -1,21 +1,20 @@
 ﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@{
-	Layout = "_Layout06";
-	ViewData["Title"] = "Learn (1)";
-}
-
+<environment include="Development">
 <h3>
-	Part (1)
+	We are in Development mode!
 </h3>
+</environment>
 
-@section SomeSection
-{
+<environment include="Production">
 <h3>
-	Part of Some Section
+	We are in Production mode!
 </h3>
-}
+</environment>
 
+<environment exclude="Development">
 <h3>
-	Part (2)
+	We are in Production mode!
 </h3>
+</environment>
