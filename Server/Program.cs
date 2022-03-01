@@ -155,7 +155,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 var webApplicationOptions =
-	new WebApplicationOptions
+	new Microsoft.AspNetCore.Builder.WebApplicationOptions
 	{
 		EnvironmentName =
 			Microsoft.Extensions.Hosting.Environments.Development,
