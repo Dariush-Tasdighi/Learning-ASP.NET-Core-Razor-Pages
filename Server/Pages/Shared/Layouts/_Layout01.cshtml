@@ -5,9 +5,9 @@
 <html lang="fa" dir="rtl">
 <head>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<title>@(ViewBag.Title)</title>
+	<title>@(ViewData["Title"])</title>
 
 	<meta name="author" content="Mr. Dariush Tasdighi" />
 	<meta name="description" content="A simple HTML5 Template for new projects." />
@@ -38,31 +38,39 @@
 
 	<link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
 
+	@*
+		<link rel="stylesheet" href="~/Server.styles.css" asp-append-version="true" />
+	*@
+
+	<link rel="stylesheet" href="~/@(nameof(Server)).styles.css" asp-append-version="true" />
+
 	@RenderSection(name: "StyleSheets", required: false)
 </head>
 
 <body>
 	<header>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow fixed-top">
 			<div class="container">
-				<a class="navbar-brand" href="#">متخصصین ایرانی</a>
+				<a class="navbar-brand" asp-area="" asp-page="Index">
+					متخصصین ایرانی
+				</a>
 
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item">
-							<a asp-page="Index" class="nav-link">خانه</a>
+							<a class="nav-link text-dark" asp-area="" asp-page="Index">خانه</a>
 						</li>
 
 						<li class="nav-item">
-							<a asp-page="About" class="nav-link">درباره ما</a>
+							<a class="nav-link text-dark" asp-area="" asp-page="About">درباره ما</a>
 						</li>
 
 						<li class="nav-item">
-							<a asp-page="Contact" class="nav-link">تماس با ما</a>
+							<a class="nav-link text-dark" asp-area="" asp-page="Contact">تماس با ما</a>
 						</li>
 					</ul>
 				</div>
@@ -70,16 +78,19 @@
 		</nav>
 	</header>
 
-	<main style="margin-top: 80px; margin-bottom: 80px;">
-		<div class="container">
+	<main role="main">
+		<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
 			@(RenderBody())
 		</div>
 	</main>
 
-	<footer class="py-3 bg-light fixed-bottom" dir="ltr">
+	<footer class="footer border-top py-3 bg-light text-muted fixed-bottom" dir="ltr">
 		<div class="container">
 			<span class="text-muted text-light">
-				© 2020 - <a href="https://DTAT.ir">DTAT.ir</a>
+				@*
+					&copy; = ©
+				*@
+				©2022 - <a href="https://DTAT.ir">DTAT.ir</a>
 			</span>
 		</div>
 	</footer>
