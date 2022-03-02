@@ -42,6 +42,10 @@ Tanx Mr. Reza Ghadimi about app.UseHsts();
 https://aka.ms/aspnetcore-hsts
 **************************************************
 
+Web Server: Kestrel
+
+IIS -> Keskrel
+
 **************************************************
 Folder [Properties] -> File: [launchSettings.json]
 
@@ -112,4 +116,14 @@ Learn20 -> Learn03
 Learn20 -> Learn04
 
 Learn21 -> Index
+**************************************************
+
+**************************************************
+Url                                 Route
+
+http://www.domain.com               /Index.cshtml
+http://www.domain.com/index         /Index.cshtml
+
+http://www.domain.com/product       /Product.cshtml
+http://www.domain.com/product       /Product/Index.cshtml
 **************************************************

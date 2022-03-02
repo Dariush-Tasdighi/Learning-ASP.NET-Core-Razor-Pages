@@ -154,23 +154,23 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-var webApplicationOptions =
-	new Microsoft.AspNetCore.Builder.WebApplicationOptions
-	{
-		EnvironmentName =
-			Microsoft.Extensions.Hosting.Environments.Development,
+//var webApplicationOptions =
+//	new Microsoft.AspNetCore.Builder.WebApplicationOptions
+//	{
+//		EnvironmentName =
+//			Microsoft.Extensions.Hosting.Environments.Development,
 
-		//EnvironmentName =
-		//	Microsoft.Extensions.Hosting.Environments.Production,
-	};
-
-var builder =
-	Microsoft.AspNetCore.Builder
-	.WebApplication.CreateBuilder(options: webApplicationOptions);
+//		//EnvironmentName =
+//		//	Microsoft.Extensions.Hosting.Environments.Production,
+//	};
 
 //var builder =
 //	Microsoft.AspNetCore.Builder
-//	.WebApplication.CreateBuilder();
+//	.WebApplication.CreateBuilder(options: webApplicationOptions);
+
+var builder =
+	Microsoft.AspNetCore.Builder
+	.WebApplication.CreateBuilder();
 
 // AddRazorPages() -> using Microsoft.Extensions.DependencyInjection;
 builder.Services.AddRazorPages();
