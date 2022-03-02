@@ -168,6 +168,10 @@ var builder =
 	Microsoft.AspNetCore.Builder
 	.WebApplication.CreateBuilder(options: webApplicationOptions);
 
+//var builder =
+//	Microsoft.AspNetCore.Builder
+//	.WebApplication.CreateBuilder();
+
 // AddRazorPages() -> using Microsoft.Extensions.DependencyInjection;
 builder.Services.AddRazorPages();
 
@@ -186,7 +190,7 @@ else
 	app.UseExceptionHandler("/Errors/Error");
 
 	// The default HSTS value is 30 days.
-	// You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	// You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts
 	// UseHsts() -> using Microsoft.AspNetCore.Builder; 
 	app.UseHsts();
 }

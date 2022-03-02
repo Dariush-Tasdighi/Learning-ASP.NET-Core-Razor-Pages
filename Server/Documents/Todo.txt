@@ -1,5 +1,9 @@
 ﻿**************************************************
+**************************************************
+**************************************************
 Session 9
+**************************************************
+**************************************************
 **************************************************
 
 **************************************************
@@ -21,4 +25,91 @@ Tanx Mr. Hootan about ViewBag and ViewData
 
 **************************************************
 libman.json
+**************************************************
+
+**************************************************
+**************************************************
+**************************************************
+Session 10
+**************************************************
+**************************************************
+**************************************************
+
+**************************************************
+**************************************************
+Tanx Mr. Reza Ghadimi about app.UseHsts();
+
+https://aka.ms/aspnetcore-hsts
+**************************************************
+
+**************************************************
+Folder [Properties] -> File: [launchSettings.json]
+
+Without: app.UseHttpsRedirection();
+
+    Server (Kestrel):
+
+        http://localhost:5288
+        https://localhost:7288
+
+    IIS (Express) and then (Kestrel):
+
+        http://localhost:63146
+        https://localhost:44395
+
+With: app.UseHttpsRedirection();
+
+    Server (Kestrel):
+
+        http://localhost:5288
+        https://localhost:7288
+
+    IIS (Express) and then (Kestrel):
+
+        http://localhost:63146
+        https://localhost:44395
+
+
+
+		"Server Pro": {
+			"commandName": "Project",
+			"dotnetRunMessages": true,
+			"launchBrowser": true,
+			"applicationUrl": "https://localhost:7288;http://localhost:5288",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Production"
+			}
+		},
+
+Test: /Learn020/learn01
+**************************************************
+
+**************************************************
+builder.Services.AddRazorPages();
+
+builder.Services.AddHsts(options =>
+{
+    options.Preload = true;
+    options.IncludeSubDomains = true;
+    options.MaxAge = TimeSpan.FromDays(60);
+    options.ExcludedHosts.Add("example.com");
+    options.ExcludedHosts.Add("www.example.com");
+});
+
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.RedirectStatusCode = (int)HttpStatusCode.TemporaryRedirect;
+    options.HttpsPort = 5001;
+});
+
+var app = builder.Build();
+**************************************************
+
+**************************************************
+Learn20 -> Learn01
+Learn20 -> Learn02
+Learn20 -> Learn03
+Learn20 -> Learn04
+
+Learn21 -> Index
 **************************************************
