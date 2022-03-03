@@ -127,3 +127,49 @@ http://www.domain.com/index         /Index.cshtml
 http://www.domain.com/product       /Product.cshtml
 http://www.domain.com/product       /Product/Index.cshtml
 **************************************************
+
+**************************************************
+**************************************************
+**************************************************
+Session 11
+**************************************************
+**************************************************
+**************************************************
+
+**************************************************
+Learn 22 -> Index
+Layouts/_Layout01
+**************************************************
+
+**************************************************
+Put Layouts in Layouts Folder!
+
+Open Graph Protocol: https://ogp.me
+
+Favicon:
+
+    https://favicon.io
+    https://www.favicon.cc
+    https://www.favicongenerator.com
+    OK: https://realfavicongenerator.net
+
+CDN (Content Delivery Network): https://cdnjs.com
+
+asp-append-version="true"
+
+CSS Isolation: For /Learn022/Learn01: Learn01.cshtml.css 
+    In Program.cs -> app.UseStaticFiles();
+
+<link rel="stylesheet" href="~/@(nameof(Server)).styles.css" asp-append-version="true" />
+
+Razor Area: asp-area
+
+Copyright: &copy; = ©
+
+Shared:
+    _ViewStart.cshtml
+    _ViewImports.cshtml
+
+Learn023 -> Partial View
+    Shared -> PartialViews
+**************************************************
