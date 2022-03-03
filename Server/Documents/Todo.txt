@@ -73,8 +73,6 @@ With: app.UseHttpsRedirection();
         http://localhost:63146
         https://localhost:44395
 
-
-
 		"Server Pro": {
 			"commandName": "Project",
 			"dotnetRunMessages": true,
@@ -137,14 +135,14 @@ Session 11
 **************************************************
 
 **************************************************
-Learn 22 -> Index
-Layouts/_Layout01
-**************************************************
+/Learn022/Index
 
-**************************************************
 Put Layouts in Layouts Folder!
+    Layouts/_Layout01
 
-Open Graph Protocol: https://ogp.me
+SEO (Search Engine Optimization)
+
+OG (Open Graph Protocol): https://ogp.me
 
 Favicon:
 
