@@ -29,7 +29,7 @@
 			"destination": "wwwroot/lib/toastr/"
 		},
 		{
-			"library": "tinymce@5.10.3",
+			"library": "tinymce@6.0.0",
 			"destination": "wwwroot/lib/tinymce/"
 		}
 	]
