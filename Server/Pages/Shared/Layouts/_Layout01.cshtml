@@ -1,8 +1,6 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿<!doctype html>
 
-<!doctype html>
-
-<html lang="fa" dir="rtl">
+<html lang="fa-IR" dir="rtl">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +11,7 @@
 	<meta name="description" content="A simple HTML5 Template for new projects." />
 
 	<meta property="og:type" content="website" />
-	<meta property="og:image" content="image.png" />
+	<meta property="og:image" content="~/images/Dariush.jpg" />
 	<meta property="og:title" content="A Basic HTML5 Template" />
 	<meta property="og:url" content="https://www.sitepoint.com/a-basic-html5-template/" />
 	<meta property="og:description" content="A simple HTML5 Template for new projects." />
@@ -22,15 +20,19 @@
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-	<environment include="Development">
+	<environment include="Development" exclude="Production">
 		<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.css" />
 		<link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
 	</environment>
 
-	<environment exclude="Development">
+	<environment include="Production" exclude="Development">
 		<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.min.css" />
 		<link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
 	</environment>
+
+	@*
+		<link rel="stylesheet" href="~/css/site.css" />
+	*@
 
 	@*
 		<link rel="stylesheet" href="~/css/site.css?v=1.0" />
@@ -78,8 +80,8 @@
 		</nav>
 	</header>
 
-	<main role="main">
-		<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+	<main role="main" class="mt-5 pt-3">
+		<div class="container">
 			@(RenderBody())
 		</div>
 	</main>
@@ -95,7 +97,7 @@
 		</div>
 	</footer>
 
-	<environment include="Development">
+	<environment include="Development" exclude="Production">
 		<script src="~/lib/bootstrap/js/bootstrap.js"></script>
 
 		<script src="~/lib/jquery/jquery.js"></script>
@@ -103,7 +105,7 @@
 		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 	</environment>
 
-	<environment exclude="Development">
+	<environment include="Production" exclude="Development">
 		<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
 
 		<script src="~/lib/jquery/jquery.min.js"></script>

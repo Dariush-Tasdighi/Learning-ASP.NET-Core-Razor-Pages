@@ -66,8 +66,8 @@ Copy and Pasted -> Icon Files:
 
 https://favicon.io/
 https://www.favicon.cc/
-https://realfavicongenerator.net/ (OK)
 https://www.favicongenerator.com/
+https://realfavicongenerator.net/ (OK)
 **************************************************
 
 **************************************************
