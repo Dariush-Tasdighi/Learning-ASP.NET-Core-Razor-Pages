@@ -1,9 +1,9 @@
-﻿<environment include="Development">
+﻿<environment include="Development" exclude="Production">
 	<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.css" />
 	<link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
 </environment>
 
-<environment exclude="Development">
+<environment include="Production" exclude="Development">
 	<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.min.css" />
 	<link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
 </environment>
