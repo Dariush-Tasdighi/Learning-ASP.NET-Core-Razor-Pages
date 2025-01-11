@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
 namespace Server.Pages
 {
-	public class Learn009Model :
-		Microsoft.AspNetCore.Mvc.RazorPages.PageModel
+	public class Learn009Model : PageModel
 	{
 		public Learn009Model() : base()
 		{
@@ -18,7 +19,7 @@ namespace Server.Pages
 		/// </summary>
 		public string? PublicField;
 
-		private string? _privateField;
+		//private string? _privateField;
 
 		protected string? ProtectedField;
 
@@ -62,7 +63,7 @@ namespace Server.Pages
 		{
 			// **************************************************
 			PublicField = "Public Field";
-			_privateField = "Private Field";
+			//_privateField = "Private Field";
 			ProtectedField = "Protected Field";
 			InternalField = "Internal Field";
 			ProtectedInternalField = "Protected Internal Field";

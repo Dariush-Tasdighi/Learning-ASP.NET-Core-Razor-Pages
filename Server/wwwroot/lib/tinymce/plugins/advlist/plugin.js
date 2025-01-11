@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 6.0.1 (2022-03-23)
+ * TinyMCE version 7.6.0 (2024-12-11)
  */
 
 (function () {
@@ -35,8 +35,6 @@
     };
     const getNumberStyles = option('advlist_number_styles');
     const getBulletStyles = option('advlist_bullet_styles');
-
-    var global = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
     const isNullable = a => a === null || a === undefined;
     const isNonNullable = a => !isNullable(a);
@@ -134,49 +132,98 @@
     }
     Optional.singletonNone = new Optional(false);
 
+    const nativeIndexOf = Array.prototype.indexOf;
+    const rawIndexOf = (ts, t) => nativeIndexOf.call(ts, t);
+    const contains = (xs, x) => rawIndexOf(xs, x) > -1;
+    const findUntil = (xs, pred, until) => {
+      for (let i = 0, len = xs.length; i < len; i++) {
+        const x = xs[i];
+        if (pred(x, i)) {
+          return Optional.some(x);
+        } else if (until(x, i)) {
+          break;
+        }
+      }
+      return Optional.none();
+    };
+
+    const keys = Object.keys;
+    const each = (obj, f) => {
+      const props = keys(obj);
+      for (let k = 0, len = props.length; k < len; k++) {
+        const i = props[k];
+        const x = obj[i];
+        f(x, i);
+      }
+    };
+    const map = (obj, f) => {
+      return tupleMap(obj, (x, i) => ({
+        k: i,
+        v: f(x, i)
+      }));
+    };
+    const tupleMap = (obj, f) => {
+      const r = {};
+      each(obj, (x, i) => {
+        const tuple = f(x, i);
+        r[tuple.k] = tuple.v;
+      });
+      return r;
+    };
+
+    var global = tinymce.util.Tools.resolve('tinymce.util.Tools');
+
+    const isCustomList = list => /\btox\-/.test(list.className);
     const isChildOfBody = (editor, elm) => {
       return editor.dom.isChildOf(elm, editor.getBody());
     };
-    const isTableCellNode = node => {
-      return node && /^(TH|TD)$/.test(node.nodeName);
-    };
-    const isListNode = editor => node => {
-      return node && /^(OL|UL|DL)$/.test(node.nodeName) && isChildOfBody(editor, node);
-    };
+    const matchNodeNames = regex => node => isNonNullable(node) && regex.test(node.nodeName);
+    const isListNode = matchNodeNames(/^(OL|UL|DL)$/);
+    const isTableCellNode = matchNodeNames(/^(TH|TD)$/);
+    const inList = (editor, parents, nodeName) => findUntil(parents, parent => isListNode(parent) && !isCustomList(parent), isTableCellNode).exists(list => list.nodeName === nodeName && isChildOfBody(editor, list));
     const getSelectedStyleType = editor => {
       const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
       const style = editor.dom.getStyle(listElm, 'listStyleType');
       return Optional.from(style);
     };
-
-    const findIndex = (list, predicate) => {
-      for (let index = 0; index < list.length; index++) {
-        const element = list[index];
-        if (predicate(element)) {
-          return index;
-        }
-      }
-      return -1;
+    const isWithinNonEditable = (editor, element) => element !== null && !editor.dom.isEditable(element);
+    const isWithinNonEditableList = (editor, element) => {
+      const parentList = editor.dom.getParent(element, 'ol,ul,dl');
+      return isWithinNonEditable(editor, parentList) || !editor.selection.isEditable();
     };
+    const setNodeChangeHandler = (editor, nodeChangeHandler) => {
+      const initialNode = editor.selection.getNode();
+      nodeChangeHandler({
+        parents: editor.dom.getParents(initialNode),
+        element: initialNode
+      });
+      editor.on('NodeChange', nodeChangeHandler);
+      return () => editor.off('NodeChange', nodeChangeHandler);
+    };
+
     const styleValueToText = styleValue => {
       return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, chr => {
         return chr.toUpperCase();
       });
     };
-    const isWithinList = (editor, e, nodeName) => {
-      const tableCellIndex = findIndex(e.parents, isTableCellNode);
-      const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
-      const lists = global.grep(parents, isListNode(editor));
-      return lists.length > 0 && lists[0].nodeName === nodeName;
-    };
+    const normalizeStyleValue = styleValue => isNullable(styleValue) || styleValue === 'default' ? '' : styleValue;
     const makeSetupHandler = (editor, nodeName) => api => {
-      const nodeChangeHandler = e => {
-        api.setActive(isWithinList(editor, e, nodeName));
+      const updateButtonState = (editor, parents) => {
+        const element = editor.selection.getStart(true);
+        api.setActive(inList(editor, parents, nodeName));
+        api.setEnabled(!isWithinNonEditableList(editor, element));
       };
-      editor.on('NodeChange', nodeChangeHandler);
-      return () => editor.off('NodeChange', nodeChangeHandler);
+      const nodeChangeHandler = e => updateButtonState(editor, e.parents);
+      return setNodeChangeHandler(editor, nodeChangeHandler);
     };
     const addSplitButton = (editor, id, tooltip, cmd, nodeName, styles) => {
+      const listStyleTypeAliases = {
+        'lower-latin': 'lower-alpha',
+        'upper-latin': 'upper-alpha',
+        'lower-alpha': 'lower-latin',
+        'upper-alpha': 'upper-latin'
+      };
+      const stylesContainsAliasMap = map(listStyleTypeAliases, alias => contains(styles, alias));
       editor.ui.registry.addSplitButton(id, {
         tooltip,
         icon: nodeName === 'OL' ? 'ordered-list' : 'unordered-list',
@@ -186,7 +233,7 @@
           const items = global.map(styles, styleValue => {
             const iconStyle = nodeName === 'OL' ? 'num' : 'bull';
             const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
-            const itemValue = styleValue === 'default' ? '' : styleValue;
+            const itemValue = normalizeStyleValue(styleValue);
             const displayText = styleValueToText(styleValue);
             return {
               type: 'choiceitem',
@@ -203,25 +250,25 @@
         },
         select: value => {
           const listStyleType = getSelectedStyleType(editor);
-          return listStyleType.map(listStyle => value === listStyle).getOr(false);
+          return listStyleType.exists(listStyle => value === listStyle || listStyleTypeAliases[listStyle] === value && !stylesContainsAliasMap[value]);
         },
         onSetup: makeSetupHandler(editor, nodeName)
       });
     };
-    const addButton = (editor, id, tooltip, cmd, nodeName, _styles) => {
+    const addButton = (editor, id, tooltip, cmd, nodeName, styleValue) => {
       editor.ui.registry.addToggleButton(id, {
         active: false,
         tooltip,
         icon: nodeName === 'OL' ? 'ordered-list' : 'unordered-list',
         onSetup: makeSetupHandler(editor, nodeName),
-        onAction: () => editor.execCommand(cmd)
+        onAction: () => editor.queryCommandState(cmd) || styleValue === '' ? editor.execCommand(cmd) : applyListFormat(editor, nodeName, styleValue)
       });
     };
     const addControl = (editor, id, tooltip, cmd, nodeName, styles) => {
       if (styles.length > 1) {
         addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
       } else {
-        addButton(editor, id, tooltip, cmd, nodeName);
+        addButton(editor, id, tooltip, cmd, nodeName, normalizeStyleValue(styles[0]));
       }
     };
     const register = editor => {
@@ -236,7 +283,7 @@
           register(editor);
           register$2(editor);
         } else {
-          console.error('Please use the Lists plugin together with the Advanced List plugin.');
+          console.error('Please use the Lists plugin together with the List Styles plugin.');
         }
       });
     };

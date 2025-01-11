@@ -1,14 +1,14 @@
-namespace Server.Pages.Errors
-{
-	public class ErrorModel :
-		Microsoft.AspNetCore.Mvc.RazorPages.PageModel
-	{
-		public ErrorModel() : base()
-		{
-		}
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-		public void OnGet()
-		{
-		}
+namespace Server.Pages.Errors;
+
+public class ErrorModel : PageModel
+{
+	public ErrorModel() : base()
+	{
+	}
+
+	public void OnGet()
+	{
 	}
 }

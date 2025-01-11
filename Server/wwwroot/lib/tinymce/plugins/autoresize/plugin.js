@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 6.0.1 (2022-03-23)
+ * TinyMCE version 7.6.0 (2024-12-11)
  */
 
 (function () {
@@ -53,7 +53,8 @@
       }
     };
     const parseCssValueToInt = (dom, elm, name, computed) => {
-      const value = parseInt(dom.getStyle(elm, name, computed), 10);
+      var _a;
+      const value = parseInt((_a = dom.getStyle(elm, name, computed)) !== null && _a !== void 0 ? _a : '', 10);
       return isNaN(value) ? 0 : value;
     };
     const shouldScrollIntoView = trigger => {
@@ -64,7 +65,7 @@
         return false;
       }
     };
-    const resize = (editor, oldSize, trigger) => {
+    const resize = (editor, oldSize, trigger, getExtraMarginBottom) => {
       var _a;
       const dom = editor.dom;
       const doc = editor.getDoc();
@@ -76,7 +77,7 @@
         return;
       }
       const docEle = doc.documentElement;
-      const resizeBottomMargin = getAutoResizeBottomMargin(editor);
+      const resizeBottomMargin = getExtraMarginBottom ? getExtraMarginBottom() : getAutoResizeOverflowPadding(editor);
       const minHeight = (_a = getMinHeight(editor)) !== null && _a !== void 0 ? _a : editor.getElement().offsetHeight;
       let resizeHeight = minHeight;
       const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
@@ -98,10 +99,19 @@
       } else {
         toggleScrolling(editor, false);
       }
-      if (resizeHeight !== oldSize.get()) {
-        const deltaSize = resizeHeight - oldSize.get();
+      const old = oldSize.get();
+      if (old.set) {
+        editor.dom.setStyles(editor.getDoc().documentElement, { 'min-height': 0 });
+        editor.dom.setStyles(editor.getBody(), { 'min-height': 'inherit' });
+      }
+      if (resizeHeight !== old.totalHeight && (contentHeight - resizeBottomMargin !== old.contentHeight || !old.set)) {
+        const deltaSize = resizeHeight - old.totalHeight;
         dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
-        oldSize.set(resizeHeight);
+        oldSize.set({
+          totalHeight: resizeHeight,
+          contentHeight,
+          set: true
+        });
         fireResizeEditor(editor);
         if (global.browser.isSafari() && (global.os.isMacOS() || global.os.isiOS())) {
           const win = editor.getWin();
@@ -111,23 +121,32 @@
           editor.selection.scrollIntoView();
         }
         if ((global.browser.isSafari() || global.browser.isChromium()) && deltaSize < 0) {
-          resize(editor, oldSize, trigger);
+          resize(editor, oldSize, trigger, getExtraMarginBottom);
         }
       }
     };
     const setup = (editor, oldSize) => {
-      editor.on('init', () => {
+      const getExtraMarginBottom = () => getAutoResizeBottomMargin(editor);
+      editor.on('init', e => {
         const overflowPadding = getAutoResizeOverflowPadding(editor);
         const dom = editor.dom;
         dom.setStyles(editor.getDoc().documentElement, { height: 'auto' });
-        dom.setStyles(editor.getBody(), {
-          'paddingLeft': overflowPadding,
-          'paddingRight': overflowPadding,
-          'min-height': 0
-        });
+        if (global.browser.isEdge() || global.browser.isIE()) {
+          dom.setStyles(editor.getBody(), {
+            'paddingLeft': overflowPadding,
+            'paddingRight': overflowPadding,
+            'min-height': 0
+          });
+        } else {
+          dom.setStyles(editor.getBody(), {
+            paddingLeft: overflowPadding,
+            paddingRight: overflowPadding
+          });
+        }
+        resize(editor, oldSize, e, getExtraMarginBottom);
       });
       editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', e => {
-        resize(editor, oldSize, e);
+        resize(editor, oldSize, e, getExtraMarginBottom);
       });
     };
 
@@ -144,7 +163,11 @@
           editor.options.set('resize', false);
         }
         if (!editor.inline) {
-          const oldSize = Cell(0);
+          const oldSize = Cell({
+            totalHeight: 0,
+            contentHeight: 0,
+            set: false
+          });
           register(editor, oldSize);
           setup(editor, oldSize);
         }

@@ -1,13 +1,11 @@
 /**
- * TinyMCE version 6.0.1 (2022-03-23)
+ * TinyMCE version 7.6.0 (2024-12-11)
  */
 
 (function () {
     'use strict';
 
     var global$5 = tinymce.util.Tools.resolve('tinymce.PluginManager');
-
-    var global$4 = tinymce.util.Tools.resolve('tinymce.util.VK');
 
     const hasProto = (v, constructor, predicate) => {
       var _a;
@@ -53,6 +51,11 @@
     };
 
     const noop = () => {
+    };
+    const constant = value => {
+      return () => {
+        return value;
+      };
     };
     const tripleEquals = (a, b) => {
       return a === b;
@@ -289,53 +292,6 @@
     const allowUnsafeLinkTarget = option('allow_unsafe_link_target');
     const useQuickLink = option('link_quicklink');
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.util.Tools');
-
-    const getValue = item => isString(item.value) ? item.value : '';
-    const getText = item => {
-      if (isString(item.text)) {
-        return item.text;
-      } else if (isString(item.title)) {
-        return item.title;
-      } else {
-        return '';
-      }
-    };
-    const sanitizeList = (list, extractValue) => {
-      const out = [];
-      global$3.each(list, item => {
-        const text = getText(item);
-        if (item.menu !== undefined) {
-          const items = sanitizeList(item.menu, extractValue);
-          out.push({
-            text,
-            items
-          });
-        } else {
-          const value = extractValue(item);
-          out.push({
-            text,
-            value
-          });
-        }
-      });
-      return out;
-    };
-    const sanitizeWith = (extracter = getValue) => list => Optional.from(list).map(list => sanitizeList(list, extracter));
-    const sanitize = list => sanitizeWith(getValue)(list);
-    const createUi = (name, label) => items => ({
-      name,
-      type: 'listbox',
-      label,
-      items
-    });
-    const ListOptions = {
-      sanitize,
-      sanitizeWith,
-      createUi,
-      getValue
-    };
-
     const keys = Object.keys;
     const hasOwnProperty = Object.hasOwnProperty;
     const each = (obj, f) => {
@@ -350,11 +306,9 @@
       r[i] = x;
     };
     const internalFilter = (obj, pred, onTrue, onFalse) => {
-      const r = {};
       each(obj, (x, i) => {
         (pred(x, i) ? onTrue : onFalse)(x, i);
       });
-      return r;
     };
     const filter = (obj, pred) => {
       const t = {};
@@ -364,20 +318,23 @@
     const has = (obj, key) => hasOwnProperty.call(obj, key);
     const hasNonNullableKey = (obj, key) => has(obj, key) && obj[key] !== undefined && obj[key] !== null;
 
-    var global$2 = tinymce.util.Tools.resolve('tinymce.dom.TreeWalker');
+    var global$4 = tinymce.util.Tools.resolve('tinymce.util.URI');
 
-    var global$1 = tinymce.util.Tools.resolve('tinymce.util.URI');
+    var global$3 = tinymce.util.Tools.resolve('tinymce.dom.TreeWalker');
 
-    const isAnchor = elm => elm && elm.nodeName.toLowerCase() === 'a';
+    var global$2 = tinymce.util.Tools.resolve('tinymce.util.Tools');
+
+    const isAnchor = elm => isNonNullable(elm) && elm.nodeName.toLowerCase() === 'a';
     const isLink = elm => isAnchor(elm) && !!getHref(elm);
     const collectNodesInRange = (rng, predicate) => {
       if (rng.collapsed) {
         return [];
       } else {
         const contents = rng.cloneContents();
-        const walker = new global$2(contents.firstChild, contents);
+        const firstChild = contents.firstChild;
+        const walker = new global$3(firstChild, contents);
         const elements = [];
-        let current = contents.firstChild;
+        let current = firstChild;
         do {
           if (predicate(current)) {
             elements.push(current);
@@ -388,43 +345,56 @@
     };
     const hasProtocol = url => /^\w+:/i.test(url);
     const getHref = elm => {
-      const href = elm.getAttribute('data-mce-href');
-      return href ? href : elm.getAttribute('href');
+      var _a, _b;
+      return (_b = (_a = elm.getAttribute('data-mce-href')) !== null && _a !== void 0 ? _a : elm.getAttribute('href')) !== null && _b !== void 0 ? _b : '';
     };
     const applyRelTargetRules = (rel, isUnsafe) => {
       const rules = ['noopener'];
       const rels = rel ? rel.split(/\s+/) : [];
-      const toString = rels => global$3.trim(rels.sort().join(' '));
+      const toString = rels => global$2.trim(rels.sort().join(' '));
       const addTargetRules = rels => {
         rels = removeTargetRules(rels);
         return rels.length > 0 ? rels.concat(rules) : rules;
       };
-      const removeTargetRules = rels => rels.filter(val => global$3.inArray(rules, val) === -1);
+      const removeTargetRules = rels => rels.filter(val => global$2.inArray(rules, val) === -1);
       const newRels = isUnsafe ? addTargetRules(rels) : removeTargetRules(rels);
       return newRels.length > 0 ? toString(newRels) : '';
     };
     const trimCaretContainers = text => text.replace(/\uFEFF/g, '');
     const getAnchorElement = (editor, selectedElm) => {
-      selectedElm = selectedElm || editor.selection.getNode();
+      selectedElm = selectedElm || getLinksInSelection(editor.selection.getRng())[0] || editor.selection.getNode();
       if (isImageFigure(selectedElm)) {
-        return editor.dom.select('a[href]', selectedElm)[0];
+        return Optional.from(editor.dom.select('a[href]', selectedElm)[0]);
       } else {
-        return editor.dom.getParent(selectedElm, 'a[href]');
+        return Optional.from(editor.dom.getParent(selectedElm, 'a[href]'));
       }
     };
+    const isInAnchor = (editor, selectedElm) => getAnchorElement(editor, selectedElm).isSome();
     const getAnchorText = (selection, anchorElm) => {
-      const text = anchorElm ? anchorElm.innerText || anchorElm.textContent : selection.getContent({ format: 'text' });
+      const text = anchorElm.fold(() => selection.getContent({ format: 'text' }), anchorElm => anchorElm.innerText || anchorElm.textContent || '');
       return trimCaretContainers(text);
     };
-    const hasLinks = elements => global$3.grep(elements, isLink).length > 0;
-    const hasLinksInSelection = rng => collectNodesInRange(rng, isLink).length > 0;
+    const getLinksInSelection = rng => collectNodesInRange(rng, isLink);
+    const getLinks$1 = elements => global$2.grep(elements, isLink);
+    const hasLinks = elements => getLinks$1(elements).length > 0;
+    const hasLinksInSelection = rng => getLinksInSelection(rng).length > 0;
     const isOnlyTextSelected = editor => {
       const inlineTextElements = editor.schema.getTextInlineElements();
       const isElement = elm => elm.nodeType === 1 && !isAnchor(elm) && !has(inlineTextElements, elm.nodeName.toLowerCase());
-      const elements = collectNodesInRange(editor.selection.getRng(), isElement);
-      return elements.length === 0;
+      const isInBlockAnchor = getAnchorElement(editor).exists(anchor => anchor.hasAttribute('data-mce-block'));
+      if (isInBlockAnchor) {
+        return false;
+      }
+      const rng = editor.selection.getRng();
+      if (!rng.collapsed) {
+        const elements = collectNodesInRange(rng, isElement);
+        return elements.length === 0;
+      } else {
+        return true;
+      }
     };
-    const isImageFigure = elm => elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
+    const isImageFigure = elm => isNonNullable(elm) && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
+
     const getLinkAttrs = data => {
       const attrs = [
         'title',
@@ -469,13 +439,14 @@
       editor.selection.select(anchorElm);
     };
     const createLink = (editor, selectedElm, text, linkAttrs) => {
+      const dom = editor.dom;
       if (isImageFigure(selectedElm)) {
-        linkImageFigure(editor, selectedElm, linkAttrs);
+        linkImageFigure(dom, selectedElm, linkAttrs);
       } else {
         text.fold(() => {
           editor.execCommand('mceInsertLink', false, linkAttrs);
         }, text => {
-          editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(text)));
+          editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(text)));
         });
       }
     };
@@ -487,12 +458,12 @@
         if (data.href === attachState.href) {
           attachState.attach();
         }
-        if (anchorElm) {
-          editor.focus();
-          updateLink(editor, anchorElm, data.text, linkAttrs);
-        } else {
+        anchorElm.fold(() => {
           createLink(editor, selectedElm, data.text, linkAttrs);
-        }
+        }, elm => {
+          editor.focus();
+          updateLink(editor, elm, data.text, linkAttrs);
+        });
       });
     };
     const unlinkSelection = editor => {
@@ -550,7 +521,7 @@
       const href = data.href;
       return {
         ...data,
-        href: global$1.isDomSafe(href, 'a', uriOptions) ? href : ''
+        href: global$4.isDomSafe(href, 'a', uriOptions) ? href : ''
       };
     };
     const link = (editor, attachState, data) => {
@@ -561,22 +532,69 @@
       editor.hasPlugin('rtc', true) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
     };
     const unlinkImageFigure = (editor, fig) => {
+      var _a;
       const img = editor.dom.select('img', fig)[0];
       if (img) {
         const a = editor.dom.getParents(img, 'a[href]', fig)[0];
         if (a) {
-          a.parentNode.insertBefore(img, a);
+          (_a = a.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(img, a);
           editor.dom.remove(a);
         }
       }
     };
-    const linkImageFigure = (editor, fig, attrs) => {
-      const img = editor.dom.select('img', fig)[0];
+    const linkImageFigure = (dom, fig, attrs) => {
+      var _a;
+      const img = dom.select('img', fig)[0];
       if (img) {
-        const a = editor.dom.create('a', attrs);
-        img.parentNode.insertBefore(a, img);
+        const a = dom.create('a', attrs);
+        (_a = img.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(a, img);
         a.appendChild(img);
       }
+    };
+
+    const getValue = item => isString(item.value) ? item.value : '';
+    const getText = item => {
+      if (isString(item.text)) {
+        return item.text;
+      } else if (isString(item.title)) {
+        return item.title;
+      } else {
+        return '';
+      }
+    };
+    const sanitizeList = (list, extractValue) => {
+      const out = [];
+      global$2.each(list, item => {
+        const text = getText(item);
+        if (item.menu !== undefined) {
+          const items = sanitizeList(item.menu, extractValue);
+          out.push({
+            text,
+            items
+          });
+        } else {
+          const value = extractValue(item);
+          out.push({
+            text,
+            value
+          });
+        }
+      });
+      return out;
+    };
+    const sanitizeWith = (extracter = getValue) => list => Optional.from(list).map(list => sanitizeList(list, extracter));
+    const sanitize = list => sanitizeWith(getValue)(list);
+    const createUi = (name, label) => items => ({
+      name,
+      type: 'listbox',
+      label,
+      items
+    });
+    const ListOptions = {
+      sanitize,
+      sanitizeWith,
+      createUi,
+      getValue
     };
 
     const isListGroup = item => hasNonNullableKey(item, 'items');
@@ -615,8 +633,14 @@
         text: initialData.text,
         title: initialData.title
       };
-      const getTitleFromUrlChange = url => someIf(persistentData.title.length <= 0, Optional.from(url.meta.title).getOr(''));
-      const getTextFromUrlChange = url => someIf(persistentData.text.length <= 0, Optional.from(url.meta.text).getOr(url.value));
+      const getTitleFromUrlChange = url => {
+        var _a;
+        return someIf(persistentData.title.length <= 0, Optional.from((_a = url.meta) === null || _a === void 0 ? void 0 : _a.title).getOr(''));
+      };
+      const getTextFromUrlChange = url => {
+        var _a;
+        return someIf(persistentData.text.length <= 0, Optional.from((_a = url.meta) === null || _a === void 0 ? void 0 : _a.text).getOr(url.value));
+      };
       const onUrlChange = data => {
         const text = getTextFromUrlChange(data.url);
         const title = getTitleFromUrlChange(data.url);
@@ -630,8 +654,8 @@
         }
       };
       const onCatalogChange = (data, change) => {
-        const catalog = findCatalog(linkCatalog, change.name).getOr([]);
-        return getDelta(persistentData.text, change.name, catalog, data);
+        const catalog = findCatalog(linkCatalog, change).getOr([]);
+        return getDelta(persistentData.text, change, catalog, data);
       };
       const onChange = (getData, change) => {
         const name = change.name;
@@ -641,7 +665,7 @@
             'anchor',
             'link'
           ], name)) {
-          return onCatalogChange(getData(), change);
+          return onCatalogChange(getData(), name);
         } else if (name === 'text' || name === 'title') {
           persistentData[name] = getData()[name];
           return Optional.none();
@@ -656,11 +680,11 @@
       getDelta
     };
 
-    var global = tinymce.util.Tools.resolve('tinymce.util.Delay');
+    var global$1 = tinymce.util.Tools.resolve('tinymce.util.Delay');
 
     const delayedConfirm = (editor, message, callback) => {
       const rng = editor.selection.getRng();
-      global.setEditorTimeout(editor, () => {
+      global$1.setEditorTimeout(editor, () => {
         editor.windowManager.confirm(message, state => {
           editor.selection.setRng(rng);
           callback(state);
@@ -732,7 +756,7 @@
       }
     };
     const getLinks = editor => {
-      const extractor = item => editor.convertURL(item.value || item.url, 'href');
+      const extractor = item => editor.convertURL(item.value || item.url || '', 'href');
       const linkList = getLinkList(editor);
       return new Promise(resolve => {
         if (isString(linkList)) {
@@ -798,11 +822,11 @@
       const dom = editor.dom;
       const onlyText = isOnlyTextSelected(editor);
       const text = onlyText ? Optional.some(getAnchorText(editor.selection, anchor)) : Optional.none();
-      const url = anchor ? Optional.some(dom.getAttrib(anchor, 'href')) : Optional.none();
-      const target = anchor ? Optional.from(dom.getAttrib(anchor, 'target')) : Optional.none();
-      const rel = nonEmptyAttr(dom, anchor, 'rel');
-      const linkClass = nonEmptyAttr(dom, anchor, 'class');
-      const title = nonEmptyAttr(dom, anchor, 'title');
+      const url = anchor.bind(anchorElm => Optional.from(dom.getAttrib(anchorElm, 'href')));
+      const target = anchor.bind(anchorElm => Optional.from(dom.getAttrib(anchorElm, 'target')));
+      const rel = anchor.bind(anchorElm => nonEmptyAttr(dom, anchorElm, 'rel'));
+      const linkClass = anchor.bind(anchorElm => nonEmptyAttr(dom, anchorElm, 'class'));
+      const title = anchor.bind(anchorElm => nonEmptyAttr(dom, anchorElm, 'title'));
       return {
         url,
         text,
@@ -823,7 +847,7 @@
           anchor: AnchorListOptions.getAnchors(editor),
           link: links
         },
-        optNode: Optional.from(linkNode),
+        optNode: linkNode,
         flags: { titleEnabled: shouldShowLinkTitle(editor) }
       };
     });
@@ -880,7 +904,8 @@
           name: 'url',
           type: 'urlinput',
           filetype: 'file',
-          label: 'URL'
+          label: 'URL',
+          picker_text: 'Browse links'
         }];
       const displayText = settings.anchor.text.map(() => ({
         name: 'text',
@@ -937,7 +962,7 @@
         onSubmit
       };
     };
-    const open$1 = editor => {
+    const open = editor => {
       const data = collectData(editor);
       data.then(info => {
         const onSubmit = handleSubmit(editor, info);
@@ -947,23 +972,97 @@
       });
     };
 
+    const register = editor => {
+      editor.addCommand('mceLink', (_ui, value) => {
+        if ((value === null || value === void 0 ? void 0 : value.dialog) === true || !useQuickLink(editor)) {
+          open(editor);
+        } else {
+          editor.dispatch('contexttoolbar-show', { toolbarKey: 'quicklink' });
+        }
+      });
+    };
+
+    const setup$2 = editor => {
+      editor.addShortcut('Meta+K', '', () => {
+        editor.execCommand('mceLink');
+      });
+    };
+
+    const Cell = initial => {
+      let value = initial;
+      const get = () => {
+        return value;
+      };
+      const set = v => {
+        value = v;
+      };
+      return {
+        get,
+        set
+      };
+    };
+
+    const singleton = doRevoke => {
+      const subject = Cell(Optional.none());
+      const revoke = () => subject.get().each(doRevoke);
+      const clear = () => {
+        revoke();
+        subject.set(Optional.none());
+      };
+      const isSet = () => subject.get().isSome();
+      const get = () => subject.get();
+      const set = s => {
+        revoke();
+        subject.set(Optional.some(s));
+      };
+      return {
+        clear,
+        isSet,
+        get,
+        set
+      };
+    };
+    const value = () => {
+      const subject = singleton(noop);
+      const on = f => subject.get().each(f);
+      return {
+        ...subject,
+        on
+      };
+    };
+
+    const removeFromStart = (str, numChars) => {
+      return str.substring(numChars);
+    };
+
+    const checkRange = (str, substr, start) => substr === '' || str.length >= substr.length && str.substr(start, start + substr.length) === substr;
+    const removeLeading = (str, prefix) => {
+      return startsWith(str, prefix) ? removeFromStart(str, prefix.length) : str;
+    };
+    const startsWith = (str, prefix) => {
+      return checkRange(str, prefix, 0);
+    };
+
+    var global = tinymce.util.Tools.resolve('tinymce.util.VK');
+
     const appendClickRemove = (link, evt) => {
       document.body.appendChild(link);
       link.dispatchEvent(evt);
       document.body.removeChild(link);
     };
-    const open = url => {
+    const openLink = url => {
       const link = document.createElement('a');
       link.target = '_blank';
       link.href = url;
       link.rel = 'noreferrer noopener';
-      const evt = document.createEvent('MouseEvents');
-      evt.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      const evt = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      document.dispatchEvent(evt);
       appendClickRemove(link, evt);
     };
-
-    const getLink = (editor, elm) => editor.dom.getParent(elm, 'a[href]');
-    const getSelectedLink = editor => getLink(editor, editor.selection.getStart());
     const hasOnlyAltModifier = e => {
       return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
     };
@@ -971,134 +1070,162 @@
       if (a) {
         const href = getHref(a);
         if (/^#/.test(href)) {
-          const targetEl = editor.dom.select(href);
+          const targetEl = editor.dom.select(`${ href },[name="${ removeLeading(href, '#') }"]`);
           if (targetEl.length) {
             editor.selection.scrollIntoView(targetEl[0], true);
           }
         } else {
-          open(a.href);
+          openLink(a.href);
         }
       }
     };
-    const openDialog = editor => () => {
-      open$1(editor);
+    const isSelectionOnImageWithEmbeddedLink = editor => {
+      const rng = editor.selection.getRng();
+      const node = rng.startContainer;
+      return isLink(node) && rng.startContainer === rng.endContainer && editor.dom.select('img', node).length === 1;
     };
-    const gotoSelectedLink = editor => () => {
-      gotoLink(editor, getSelectedLink(editor));
+    const getLinkFromElement = (editor, element) => {
+      const links = getLinks$1(editor.dom.getParents(element));
+      return someIf(links.length === 1, links[0]);
     };
-    const setupGotoLinks = editor => {
+    const getLinkInSelection = editor => {
+      const links = getLinksInSelection(editor.selection.getRng());
+      return someIf(links.length > 0, links[0]).or(getLinkFromElement(editor, editor.selection.getNode()));
+    };
+    const getLinkFromSelection = editor => editor.selection.isCollapsed() || isSelectionOnImageWithEmbeddedLink(editor) ? getLinkFromElement(editor, editor.selection.getStart()) : getLinkInSelection(editor);
+    const setup$1 = editor => {
+      const selectedLink = value();
+      const getSelectedLink = () => selectedLink.get().or(getLinkFromSelection(editor));
+      const gotoSelectedLink = () => getSelectedLink().each(link => gotoLink(editor, link));
+      editor.on('contextmenu', e => {
+        getLinkFromElement(editor, e.target).each(selectedLink.set);
+      });
+      editor.on('SelectionChange', () => {
+        if (!selectedLink.isSet()) {
+          getLinkFromSelection(editor).each(selectedLink.set);
+        }
+      });
       editor.on('click', e => {
-        const link = getLink(editor, e.target);
-        if (link && global$4.metaKeyPressed(e)) {
+        selectedLink.clear();
+        const links = getLinks$1(editor.dom.getParents(e.target));
+        if (links.length === 1 && global.metaKeyPressed(e)) {
           e.preventDefault();
-          gotoLink(editor, link);
+          gotoLink(editor, links[0]);
         }
       });
       editor.on('keydown', e => {
-        const link = getSelectedLink(editor);
-        if (link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
-          e.preventDefault();
-          gotoLink(editor, link);
+        selectedLink.clear();
+        if (!e.isDefaultPrevented() && e.keyCode === 13 && hasOnlyAltModifier(e)) {
+          getSelectedLink().each(link => {
+            e.preventDefault();
+            gotoLink(editor, link);
+          });
         }
       });
+      return { gotoSelectedLink };
+    };
+
+    const openDialog = editor => () => {
+      editor.execCommand('mceLink', false, { dialog: true });
     };
     const toggleState = (editor, toggler) => {
       editor.on('NodeChange', toggler);
       return () => editor.off('NodeChange', toggler);
     };
-    const toggleActiveState = editor => api => {
-      const updateState = () => api.setActive(!editor.mode.isReadOnly() && getAnchorElement(editor, editor.selection.getNode()) !== null);
+    const toggleLinkState = editor => api => {
+      const updateState = () => {
+        api.setActive(!editor.mode.isReadOnly() && isInAnchor(editor, editor.selection.getNode()));
+        api.setEnabled(editor.selection.isEditable());
+      };
       updateState();
       return toggleState(editor, updateState);
     };
-    const toggleEnabledState = editor => api => {
-      const updateState = () => api.setEnabled(getAnchorElement(editor, editor.selection.getNode()) !== null);
+    const toggleLinkMenuState = editor => api => {
+      const updateState = () => {
+        api.setEnabled(editor.selection.isEditable());
+      };
       updateState();
       return toggleState(editor, updateState);
     };
-    const toggleUnlinkState = editor => api => {
+    const toggleRequiresLinkState = editor => api => {
       const hasLinks$1 = parents => hasLinks(parents) || hasLinksInSelection(editor.selection.getRng());
       const parents = editor.dom.getParents(editor.selection.getStart());
-      api.setEnabled(hasLinks$1(parents));
-      return toggleState(editor, e => api.setEnabled(hasLinks$1(e.parents)));
+      const updateEnabled = parents => {
+        api.setEnabled(hasLinks$1(parents) && editor.selection.isEditable());
+      };
+      updateEnabled(parents);
+      return toggleState(editor, e => updateEnabled(e.parents));
     };
-
-    const register = editor => {
-      editor.addCommand('mceLink', () => {
-        if (useQuickLink(editor)) {
-          editor.dispatch('contexttoolbar-show', { toolbarKey: 'quicklink' });
-        } else {
-          openDialog(editor)();
-        }
-      });
-    };
-
-    const setup = editor => {
-      editor.addShortcut('Meta+K', '', () => {
-        editor.execCommand('mceLink');
-      });
-    };
-
-    const setupButtons = editor => {
+    const setupButtons = (editor, openLink) => {
       editor.ui.registry.addToggleButton('link', {
         icon: 'link',
         tooltip: 'Insert/edit link',
+        shortcut: 'Meta+K',
         onAction: openDialog(editor),
-        onSetup: toggleActiveState(editor)
+        onSetup: toggleLinkState(editor)
       });
       editor.ui.registry.addButton('openlink', {
         icon: 'new-tab',
         tooltip: 'Open link',
-        onAction: gotoSelectedLink(editor),
-        onSetup: toggleEnabledState(editor)
+        onAction: openLink.gotoSelectedLink,
+        onSetup: toggleRequiresLinkState(editor)
       });
       editor.ui.registry.addButton('unlink', {
         icon: 'unlink',
         tooltip: 'Remove link',
         onAction: () => unlink(editor),
-        onSetup: toggleUnlinkState(editor)
+        onSetup: toggleRequiresLinkState(editor)
       });
     };
-    const setupMenuItems = editor => {
+    const setupMenuItems = (editor, openLink) => {
       editor.ui.registry.addMenuItem('openlink', {
         text: 'Open link',
         icon: 'new-tab',
-        onAction: gotoSelectedLink(editor),
-        onSetup: toggleEnabledState(editor)
+        onAction: openLink.gotoSelectedLink,
+        onSetup: toggleRequiresLinkState(editor)
       });
       editor.ui.registry.addMenuItem('link', {
         icon: 'link',
         text: 'Link...',
         shortcut: 'Meta+K',
-        onAction: openDialog(editor)
+        onAction: openDialog(editor),
+        onSetup: toggleLinkMenuState(editor)
       });
       editor.ui.registry.addMenuItem('unlink', {
         icon: 'unlink',
         text: 'Remove link',
         onAction: () => unlink(editor),
-        onSetup: toggleUnlinkState(editor)
+        onSetup: toggleRequiresLinkState(editor)
       });
     };
     const setupContextMenu = editor => {
       const inLink = 'link unlink openlink';
       const noLink = 'link';
-      editor.ui.registry.addContextMenu('link', { update: element => hasLinks(editor.dom.getParents(element, 'a')) ? inLink : noLink });
+      editor.ui.registry.addContextMenu('link', {
+        update: element => {
+          const isEditable = editor.dom.isEditable(element);
+          if (!isEditable) {
+            return '';
+          }
+          return hasLinks(editor.dom.getParents(element, 'a')) ? inLink : noLink;
+        }
+      });
     };
-    const setupContextToolbars = editor => {
+    const setupContextToolbars = (editor, openLink) => {
       const collapseSelectionToEnd = editor => {
         editor.selection.collapse(false);
       };
       const onSetupLink = buttonApi => {
         const node = editor.selection.getNode();
-        buttonApi.setEnabled(getAnchorElement(editor, node) !== null);
+        buttonApi.setEnabled(isInAnchor(editor, node) && editor.selection.isEditable());
         return noop;
       };
       const getLinkText = value => {
         const anchor = getAnchorElement(editor);
         const onlyText = isOnlyTextSelected(editor);
-        if (!anchor && onlyText) {
+        if (anchor.isNone() && onlyText) {
           const text = getAnchorText(editor.selection, anchor);
-          return Optional.some(text.length > 0 ? text : value);
+          return someIf(text.length === 0, value);
         } else {
           return Optional.none();
         }
@@ -1108,13 +1235,13 @@
           type: 'contextformtogglebutton',
           icon: 'link',
           tooltip: 'Link',
-          onSetup: toggleActiveState(editor)
+          onSetup: toggleLinkState(editor)
         },
         label: 'Link',
-        predicate: node => !!getAnchorElement(editor, node) && hasContextToolbar(editor),
+        predicate: node => hasContextToolbar(editor) && isInAnchor(editor, node),
         initValue: () => {
           const elm = getAnchorElement(editor);
-          return !!elm ? getHref(elm) : '';
+          return elm.fold(constant(''), getHref);
         },
         commands: [
           {
@@ -1124,8 +1251,8 @@
             primary: true,
             onSetup: buttonApi => {
               const node = editor.selection.getNode();
-              buttonApi.setActive(!!getAnchorElement(editor, node));
-              return toggleActiveState(editor)(buttonApi);
+              buttonApi.setActive(isInAnchor(editor, node));
+              return toggleLinkState(editor)(buttonApi);
             },
             onAction: formApi => {
               const value = formApi.getValue();
@@ -1139,7 +1266,7 @@
                 text,
                 title: Optional.none(),
                 rel: Optional.none(),
-                target: Optional.none(),
+                target: Optional.from(getDefaultLinkTarget(editor)),
                 class: Optional.none()
               });
               collapseSelectionToEnd(editor);
@@ -1162,24 +1289,27 @@
             tooltip: 'Open link',
             onSetup: onSetupLink,
             onAction: formApi => {
-              gotoSelectedLink(editor)();
+              openLink.gotoSelectedLink();
               formApi.hide();
             }
           }
         ]
       });
     };
+    const setup = editor => {
+      const openLink = setup$1(editor);
+      setupButtons(editor, openLink);
+      setupMenuItems(editor, openLink);
+      setupContextMenu(editor);
+      setupContextToolbars(editor, openLink);
+    };
 
     var Plugin = () => {
       global$5.add('link', editor => {
         register$1(editor);
-        setupButtons(editor);
-        setupMenuItems(editor);
-        setupContextMenu(editor);
-        setupContextToolbars(editor);
-        setupGotoLinks(editor);
         register(editor);
         setup(editor);
+        setup$2(editor);
       });
     };
 

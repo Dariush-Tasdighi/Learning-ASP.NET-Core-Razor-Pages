@@ -7,8 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\js\" />
-	  <Folder Include="wwwroot\lib\" />
+		<Folder Include="wwwroot\js\" />
+		<Folder Include="wwwroot\lib\" />
 	</ItemGroup>
 
 </Project>

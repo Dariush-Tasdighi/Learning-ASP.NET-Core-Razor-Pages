@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 6.0.1 (2022-03-23)
+ * TinyMCE version 7.6.0 (2024-12-11)
  */
 
 (function () {
@@ -141,7 +141,8 @@
         const skinUrlBase = getSkinUrl(editor);
         const skinUrl = skinUrlBase ? editor.documentBaseURI.toAbsolute(skinUrlBase) : global$2.baseURL + '/skins/ui/' + skin;
         const contentSkinUrlPart = global$2.baseURL + '/skins/content/';
-        return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css' || href.indexOf(contentSkinUrlPart) !== -1;
+        const suffix = editor.editorManager.suffix;
+        return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + `${ suffix }.css` || href.indexOf(contentSkinUrlPart) !== -1;
       }
       return false;
     };
@@ -163,9 +164,10 @@
       const selectors = [];
       const contentCSSUrls = {};
       const append = (styleSheet, imported) => {
-        let href = styleSheet.href, rules;
+        let href = styleSheet.href;
+        let rules;
         href = removeCacheSuffix(href);
-        if (!href || !fileFilter(href, imported) || isSkinContentCss(editor, href)) {
+        if (!href || fileFilter && !fileFilter(href, imported) || isSkinContentCss(editor, href)) {
           return;
         }
         global.each(styleSheet.imports, styleSheet => {
@@ -176,7 +178,7 @@
         } catch (e) {
         }
         global.each(rules, cssRule => {
-          if (isCssImportRule(cssRule)) {
+          if (isCssImportRule(cssRule) && cssRule.styleSheet) {
             append(cssRule.styleSheet, true);
           } else if (isCssPageRule(cssRule)) {
             global.each(cssRule.selectorText.split(','), selector => {
@@ -202,7 +204,7 @@
       return selectors;
     };
     const defaultConvertSelectorToFormat = (editor, selectorText) => {
-      let format;
+      let format = {};
       const selector = /^(?:([a-z0-9\-_]+))?(\.[a-z0-9_\-\.]+)$/i.exec(selectorText);
       if (!selector) {
         return;
@@ -262,10 +264,11 @@
     };
     const convertSelectorToFormat = (editor, plugin, selector, group) => {
       let selectorConverter;
+      const converter = getSelectorConverter(editor);
       if (group && group.selector_converter) {
         selectorConverter = group.selector_converter;
-      } else if (getSelectorConverter(editor)) {
-        selectorConverter = getSelectorConverter(editor);
+      } else if (converter) {
+        selectorConverter = converter;
       } else {
         selectorConverter = () => {
           return defaultConvertSelectorToFormat(editor, selector);

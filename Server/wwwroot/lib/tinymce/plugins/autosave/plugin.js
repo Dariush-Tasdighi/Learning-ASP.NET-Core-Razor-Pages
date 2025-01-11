@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 6.0.1 (2022-03-23)
+ * TinyMCE version 7.6.0 (2024-12-11)
  */
 
 (function () {
@@ -48,7 +48,7 @@
         m: 60000
       };
       const parsedTime = /^(\d+)([ms]?)$/.exec(timeString);
-      return (parsedTime[2] ? multiples[parsedTime[2]] : 1) * parseInt(timeString, 10);
+      return (parsedTime && parsedTime[2] ? multiples[parsedTime[2]] : 1) * parseInt(timeString, 10);
     };
 
     const option = name => editor => editor.options.get(name);
@@ -112,7 +112,8 @@
       }
     };
     const hasDraft = editor => {
-      const time = parseInt(global$2.getItem(getAutoSavePrefix(editor) + 'time'), 10) || 0;
+      var _a;
+      const time = parseInt((_a = global$2.getItem(getAutoSavePrefix(editor) + 'time')) !== null && _a !== void 0 ? _a : '0', 10) || 0;
       if (new Date().getTime() - time > getAutoSaveRetention(editor)) {
         removeDraft(editor, false);
         return false;
@@ -139,9 +140,10 @@
       }
     };
     const restoreDraft = editor => {
+      var _a;
       const prefix = getAutoSavePrefix(editor);
       if (hasDraft(editor)) {
-        editor.setContent(global$2.getItem(prefix + 'draft'), { format: 'raw' });
+        editor.setContent((_a = global$2.getItem(prefix + 'draft')) !== null && _a !== void 0 ? _a : '', { format: 'raw' });
         fireRestoreDraft(editor);
       }
     };
@@ -188,27 +190,27 @@
     };
 
     const makeSetupHandler = editor => api => {
-      api.setEnabled(hasDraft(editor));
-      const editorEventCallback = () => api.setEnabled(hasDraft(editor));
+      const shouldEnable = () => hasDraft(editor) && !editor.mode.isReadOnly();
+      api.setEnabled(shouldEnable());
+      const editorEventCallback = () => api.setEnabled(shouldEnable());
       editor.on('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
       return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
     };
     const register = editor => {
       startStoreDraft(editor);
+      const onAction = () => {
+        restoreLastDraft(editor);
+      };
       editor.ui.registry.addButton('restoredraft', {
         tooltip: 'Restore last draft',
         icon: 'restore-draft',
-        onAction: () => {
-          restoreLastDraft(editor);
-        },
+        onAction,
         onSetup: makeSetupHandler(editor)
       });
       editor.ui.registry.addMenuItem('restoredraft', {
         text: 'Restore last draft',
         icon: 'restore-draft',
-        onAction: () => {
-          restoreLastDraft(editor);
-        },
+        onAction,
         onSetup: makeSetupHandler(editor)
       });
     };

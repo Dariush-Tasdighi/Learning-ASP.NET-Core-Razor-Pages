@@ -48,11 +48,9 @@
 		Solution (2) - (For)
 	</h3>
 
-	@for (int index = 1; index <= 30; index++)
+	@for (var index = 1; index <= 30; index++)
 	{
-		string fileIndex =
-			index.ToString()
-			.PadLeft(totalWidth: 3, paddingChar: '0');
+		var fileIndex = index.ToString().PadLeft(totalWidth: 3, paddingChar: '0');
 
 		<a href="~/Learn@(fileIndex)">Learn @(fileIndex)</a>
 		<br />
@@ -68,9 +66,7 @@
 
 	@for (int index = 1; index <= 20; index++)
 	{
-		string fileIndex =
-			index.ToString()
-			.PadLeft(totalWidth: 3, paddingChar: '0');
+		var fileIndex = index.ToString().PadLeft(totalWidth: 3, paddingChar: '0');
 
 		@*
 			دستور ذیل کار نمی‌کند

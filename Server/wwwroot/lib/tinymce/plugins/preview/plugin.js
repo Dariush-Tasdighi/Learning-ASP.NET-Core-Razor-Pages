@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 6.0.1 (2022-03-23)
+ * TinyMCE version 7.6.0 (2024-12-11)
  */
 
 (function () {
@@ -50,7 +50,8 @@
           items: [{
               name: 'preview',
               type: 'iframe',
-              sandboxed: true
+              sandboxed: true,
+              transparent: false
             }]
         },
         buttons: [{
@@ -75,12 +76,14 @@
       editor.ui.registry.addButton('preview', {
         icon: 'preview',
         tooltip: 'Preview',
-        onAction
+        onAction,
+        context: 'any'
       });
       editor.ui.registry.addMenuItem('preview', {
         icon: 'preview',
         text: 'Preview',
-        onAction
+        onAction,
+        context: 'any'
       });
     };
 

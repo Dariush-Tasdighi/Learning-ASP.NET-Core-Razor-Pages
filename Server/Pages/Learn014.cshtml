@@ -2,11 +2,11 @@
 @model Server.Pages.Learn014Model
 
 @{
-	string fullName = "Dariush Tasdighi";
+	var fullName = "Dariush Tasdighi";
 }
 
 <div>
-	@if (fullName.StartsWith("Dariush"))
+	@if (fullName.StartsWith(value: "Dariush"))
 	{
 		<span>I'm Dariush (1)</span>
 	}
@@ -20,7 +20,7 @@
 	Error: Razor
 
 	<div>
-		@if(fullName.StartsWith("Dariush"))
+		@if(fullName.StartsWith(value: "Dariush"))
 		{
 			I'm Dariush (2)
 		}
@@ -34,7 +34,7 @@
 <hr />
 
 <div>
-	@if (fullName.StartsWith("Dariush"))
+	@if (fullName.StartsWith(value: "Dariush"))
 	{
 		<text>I'm Dariush (3)</text>
 	}
@@ -47,7 +47,7 @@
 <hr />
 
 <div>
-	@if (fullName.StartsWith("Dariush"))
+	@if (fullName.StartsWith(value: "Dariush"))
 	{
 		<text>I'm <b>Dariush</b> (4)</text>
 	}
@@ -60,7 +60,7 @@
 <hr />
 
 <div>
-	@if (fullName.StartsWith("Dariush"))
+	@if (fullName.StartsWith(value: "Dariush"))
 	{
 		@:I'm Dariush (5)
 	}
@@ -73,7 +73,7 @@
 <hr />
 
 <div>
-	@if (fullName.StartsWith("Dariush"))
+	@if (fullName.StartsWith(value: "Dariush"))
 	{
 		@:I'm <b>Dariush</b> (6)
 	}

@@ -1,14 +1,14 @@
-namespace Server.Pages
-{
-	public class Learn014Model :
-		Microsoft.AspNetCore.Mvc.RazorPages.PageModel
-	{
-		public Learn014Model() : base()
-		{
-		}
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-		public void OnGet()
-		{
-		}
+namespace Server.Pages;
+
+public class Learn014Model : PageModel
+{
+	public Learn014Model() : base()
+	{
+	}
+
+	public void OnGet()
+	{
 	}
 }

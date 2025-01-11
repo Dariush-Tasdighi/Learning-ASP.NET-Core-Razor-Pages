@@ -1,12 +1,22 @@
-using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc.RazorPages;
+
+//namespace Server.Pages
+//{
+//	public class Learn001Model : PageModel
+//	{
+//		public void OnGet()
+//		{
+//		}
+//	}
+//}
+
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Server.Pages
+namespace Server.Pages;
+
+public class Learn001Model : PageModel
 {
-    public class Learn001Model : PageModel
-    {
-        public void OnGet()
-        {
-        }
-    }
+	public void OnGet()
+	{
+	}
 }
