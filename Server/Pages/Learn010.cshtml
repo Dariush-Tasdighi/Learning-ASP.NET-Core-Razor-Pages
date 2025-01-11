@@ -28,7 +28,7 @@
 	<hr />
 
 	@{
-		string myImageFileName = "Dariush";
+		var myImageFileName = "Dariush";
 	}
 
 	@*
@@ -38,7 +38,7 @@
 	*@
 
 	@{
-		string myImageFileNameWithExtension = $"{myImageFileName}.jpg";
+		var myImageFileNameWithExtension = $"{myImageFileName}.jpg";
 	}
 
 	@*
@@ -68,14 +68,14 @@
 	</h3>
 
 	@{
-		string text = "<h3>Hello, World!</h3>";
+		var text = "<h3>Hello, World!</h3>";
 	}
 
 	@(text)
 
 	<br />
 
-	@Html.Raw(text)
+	@(Html.Raw(value: text))
 
 	<hr />
 </body>

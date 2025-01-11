@@ -2,10 +2,23 @@
 @model Server.Pages.Learn012Model
 
 @{
+	int firstNumber = 1;
+
 	for (var index = 1; index <= 5; index++)
 	{
 		<h3>Hello, World (@(index))!</h3>
 
 		<hr />
 	}
+
+	int secondNumber = 1;
+}
+
+<hr />
+
+@for (var index = 1; index <= 5; index++)
+{
+	<h3>Hello, World (@(index))!</h3>
+
+	<hr />
 }

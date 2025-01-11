@@ -16,6 +16,10 @@ namespace Server.Pages;
 
 public class Learn001Model : PageModel
 {
+	public Learn001Model() : base()
+	{
+	}
+
 	public void OnGet()
 	{
 	}

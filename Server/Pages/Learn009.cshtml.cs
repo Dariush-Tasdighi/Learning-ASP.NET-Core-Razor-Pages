@@ -19,7 +19,7 @@ namespace Server.Pages
 		/// </summary>
 		public string? PublicField;
 
-		//private string? _privateField;
+		private string? _privateField;
 
 		protected string? ProtectedField;
 
@@ -63,7 +63,7 @@ namespace Server.Pages
 		{
 			// **************************************************
 			PublicField = "Public Field";
-			//_privateField = "Private Field";
+			_privateField = "Private Field";
 			ProtectedField = "Protected Field";
 			InternalField = "Internal Field";
 			ProtectedInternalField = "Protected Internal Field";
