@@ -195,7 +195,7 @@ else
 // https://www.DTAT.ir
 //		https://DTAT.ir
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
