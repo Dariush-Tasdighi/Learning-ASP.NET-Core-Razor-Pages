@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Server.Pages.Learn020;
@@ -10,6 +11,6 @@ public class IndexModel : PageModel
 
 	public void OnGet()
 	{
-		throw new System.Exception(message: "Some Error!");
+		throw new Exception(message: "Some Error!");
 	}
 }

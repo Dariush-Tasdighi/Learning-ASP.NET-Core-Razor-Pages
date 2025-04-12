@@ -3,6 +3,10 @@
 	"defaultProvider": "cdnjs",
 	"libraries": [
 		{
+			"library": "popper.js@2.11.8",
+			"destination": "wwwroot/lib/propper/"
+		},
+		{
 			"library": "bootstrap@5.3.3",
 			"destination": "wwwroot/lib/bootstrap/"
 		},
@@ -23,7 +27,7 @@
 			"destination": "wwwroot/lib/jquery-validation-unobtrusive/"
 		},
 		{
-			"library": "tinymce@7.6.0",
+			"library": "tinymce@7.6.1",
 			"destination": "wwwroot/lib/tinymce/"
 		}
 	]
