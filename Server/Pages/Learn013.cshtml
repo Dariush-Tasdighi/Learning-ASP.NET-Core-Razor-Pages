@@ -2,24 +2,28 @@
 @model Server.Pages.Learn013Model
 
 @*
-	Error: Razor
-
-	@ for(...)
-*@
-
-@*
 	HTML Elements:
 
 	- Inline Element: b, i, u, ...
 	- Block Element: p, div, h1, h2, ...
 *@
 
-<div>
-	Hi, I'm <b>Dariush</b><i>Tasdighi</i>
-</div>
+@*
+	Bad Practice:
+
+	<div>Dariush</div>
+*@
+
+@*
+	Bad Practice:
+
+	<b>
+		Dariush
+	</b>
+*@
 
 <div>
-	Hi, I'm <p>Dariush</p><p>Tasdighi</p>
+	Hi, I'm <b>Dariush</b><i>Tasdighi</i>
 </div>
 
 @for (var index = 1; index <= 5; index++)

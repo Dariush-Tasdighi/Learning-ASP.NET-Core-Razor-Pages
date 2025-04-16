@@ -2,23 +2,33 @@
 @model Server.Pages.Learn012Model
 
 @{
-	int firstNumber = 1;
+	int alaki = 1;
 
 	for (var index = 1; index <= 5; index++)
 	{
-		<h3>Hello, World (@(index))!</h3>
+		<h3>
+			Hello, World (@(index))!
+		</h3>
 
 		<hr />
 	}
 
-	int secondNumber = 1;
+	alaki++;
 }
 
 <hr />
 
+@*
+	Error: Razor
+
+	@ for(...)
+*@
+
 @for (var index = 1; index <= 5; index++)
 {
-	<h3>Hello, World (@(index))!</h3>
+	<h3>
+		Hello, World (@(index))!
+	</h3>
 
 	<hr />
 }
