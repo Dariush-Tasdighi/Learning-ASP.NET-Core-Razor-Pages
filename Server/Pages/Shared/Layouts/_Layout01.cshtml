@@ -1,6 +1,6 @@
 ﻿<!doctype html>
 
-<html lang="fa-IR" dir="rtl">
+<html lang="fa" dir="rtl">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -46,7 +46,7 @@
 
 	<link rel="stylesheet" href="~/@(nameof(Server)).styles.css" asp-append-version="true" />
 
-	@RenderSection(name: "StyleSheets", required: false)
+	@(RenderSection(name: "StyleSheets", required: false))
 </head>
 
 <body>
@@ -98,7 +98,7 @@
 	</footer>
 
 	<environment include="Development" exclude="Production">
-		<script src="~/lib/bootstrap/js/bootstrap.js"></script>
+		<script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
 
 		<script src="~/lib/jquery/jquery.js"></script>
 		<script src="~/lib/jquery-validate/jquery.validate.js"></script>
@@ -106,13 +106,13 @@
 	</environment>
 
 	<environment include="Production" exclude="Development">
-		<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+		<script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 		<script src="~/lib/jquery/jquery.min.js"></script>
 		<script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
 		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 	</environment>
 
-	@RenderSection(name: "Scripts", required: false)
+	@(RenderSection(name: "Scripts", required: false))
 </body>
 </html>
